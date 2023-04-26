@@ -26,6 +26,8 @@ export default function CurrentTrack() {
                 image: item.album.images[2].url
             }
             dispatch({type: reducerCases.SET_PLAYING, currentlyPlaying})
+          } else {
+            dispatch({type: reducerCases.SET_PLAYING, currentlyPlaying: null})
           }
         };
         getCurrentTrack()
