@@ -57,6 +57,9 @@ const Container = styled.div`
         display: flex;
         align-items: center;
         gap: 1rem;
+        img {
+          height: 50px;
+        }
         &__info{
             display: flex;
             flex-direction: column;

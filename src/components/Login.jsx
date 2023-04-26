@@ -5,7 +5,7 @@ export default function Login() {
 
     const handleClick = () => {
         const clientId = "788cecc9a7f74beda4987267ce839a8e"
-        const redirectUrl = "https://sparkly-puppy-06bc75.netlify.app/";
+        const redirectUrl = "https://sparkly-puppy-06bc75.netlify.app";
         const apiUrl = "https://accounts.spotify.com/authorize"
         const scope = [
             'user-read-email',
@@ -15,7 +15,8 @@ export default function Login() {
             'user-read-currently-playing',
             'user-read-recently-played',
             'user-read-playback-position',
-            'user-top-read'
+            'user-top-read',
+            'streaming'
         ]
         window.location.href = `${apiUrl}?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scope.join(" ")}&response_type=token&show_dialog=true`
     }

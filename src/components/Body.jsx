@@ -73,7 +73,6 @@ export default function Body({headerBackground}) {
             image,
         }
         dispatch({type:reducerCases.SET_PLAYING, currentlyPlaying})
-        dispatch({type: reducerCases.SET_PLAYER_STATE, playerState: true})
       } else {
         dispatch({type: reducerCases.SET_PLAYER_STATE, playerState:true})
       }
