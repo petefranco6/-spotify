@@ -5,7 +5,7 @@ import { useStateProvider } from "../utils/StateProvider";
 import axios from "axios";
 import { reducerCases } from "../utils/Constants";
 
-export default function Body({headerBackground}) {
+export default function Body({ headerBackground }) {
   const [{ token, selectedPlaylistId, selectedPlaylist }, dispatch] =
     useStateProvider();
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function Body({headerBackground}) {
           image: track.album.images[2].url,
           duration: track.duration_ms,
           album: track.album.name,
-          context_uri: track.album.uri,
+          context_uri: response.data.uri,
           track_number: track.track_number,
         })),
       };
@@ -43,40 +43,47 @@ export default function Body({headerBackground}) {
   }, [token, dispatch, selectedPlaylistId]);
 
   const msToMinutesAndSeconds = (ms) => {
-    const minutes = Math.floor(ms/60000);
-    const seconds = ((ms% 60000) / 1000).toFixed(0);
+    const minutes = Math.floor(ms / 60000);
+    const seconds = ((ms % 60000) / 1000).toFixed(0);
     return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-  }
+  };
 
-  const playTrack = async (id, name, artists, image, context_uri, track_number) => {
+  const playTrack = async (
+    id,
+    name,
+    artists,
+    image,
+    context_uri,
+    track_number
+  ) => {
     const response = await axios.put(
-        `https://api.spotify.com/v1/me/player/play`,
-        {
-            context_uri,
-            offset: {
-                position: track_number - 1
-            },
-            position_ms: 0
+      `https://api.spotify.com/v1/me/player/play`,
+      {
+        context_uri,
+        offset: {
+          position: track_number
         },
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if(response.status === 204) {
-        const currentlyPlaying = {
-            id,
-            name,
-            artists,
-            image,
-        }
-        dispatch({type:reducerCases.SET_PLAYING, currentlyPlaying})
-      } else {
-        dispatch({type: reducerCases.SET_PLAYER_STATE, playerState:true})
+        position_ms: 0,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
       }
-  }
+    );
+    if (response.status === 202) {
+      const currentlyPlaying = {
+        id,
+        name,
+        artists,
+        image,
+      };
+      dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying });
+    } else {
+      dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
+    }
+  };
 
   return (
     <Container headerBackground={headerBackground}>
@@ -125,7 +132,20 @@ export default function Body({headerBackground}) {
                   index
                 ) => {
                   return (
-                    <div className="row" key={id} onClick={() => playTrack(id, name, artists, image, context_uri, track_number)}>
+                    <div
+                      className="row"
+                      key={id}
+                      onClick={() =>
+                        playTrack(
+                          id,
+                          name,
+                          artists,
+                          image,
+                          context_uri,
+                          index
+                        )
+                      }
+                    >
                       <div className="col">
                         <span>{index + 1}</span>
                       </div>
@@ -189,7 +209,8 @@ const Container = styled.div`
       top: 15vh;
       padding: 1rem 3rem;
       transition: 0.3s ease-in-out;
-      background-color: ${({headerBackground}) => headerBackground ? "#000000dc" : "none"};
+      background-color: ${({ headerBackground }) =>
+        headerBackground ? "#000000dc" : "none"};
     }
     .tracks {
       margin: 0 2 rem;
@@ -212,12 +233,12 @@ const Container = styled.div`
           }
         }
         .detail {
+          display: flex;
+          gap: 1rem;
+          .info {
             display: flex;
-            gap: 1rem;
-            .info {
-                display: flex;
-                flex-direction: column;
-            }
+            flex-direction: column;
+          }
         }
       }
     }

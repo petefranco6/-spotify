@@ -14,31 +14,27 @@ import { reducerCases } from "../utils/Constants";
 export default function PlayerControls() {
   const [{ token, playerState }, dispatch] = useStateProvider();
   const changeTrack = async () => {
-
-    //dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
-    setTimeout(async () => {
-      const response = await axios.get(
-        "https://api.spotify.com/v1/me/player/currently-playing",
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.data !== "") {
-        const { item } = response.data;
-        const currentlyPlaying = {
-          id: item.id,
-          name: item.name,
-          artists: item.artists.map((artist) => artist.name),
-          image: item.album.images[2].url,
-        };
-        dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying });
-      } else {
-        dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying: null });
+    const response = await axios.get(
+      "https://api.spotify.com/v1/me/player/currently-playing",
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
       }
-    }, 500);
+    );
+    if (response.data !== "") {
+      const { item } = response.data;
+      const currentlyPlaying = {
+        id: item.id,
+        name: item.name,
+        artists: item.artists.map((artist) => artist.name),
+        image: item.album.images[2].url,
+      };
+      dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying });
+    } else {
+      dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying: null });
+    }
   };
 
   const changeState = async () => {
@@ -54,10 +50,12 @@ export default function PlayerControls() {
         <BsShuffle />
       </div>
       <div className="previous">
-        <CgPlayTrackPrev onClick={() => {
+        <CgPlayTrackPrev
+          onClick={() => {
             changeTrack();
             window.player.nextTrack().then(() => {});
-          }} />
+          }}
+        />
       </div>
       <div className="state">
         {playerState ? (

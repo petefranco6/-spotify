@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { useStateProvider } from "../utils/StateProvider";
 import { reducerCases } from "../utils/Constants";
 import PlayerControls from "./PlayerControls";
+import Volume from "./Volume";
+import axios from "axios";
 
 export default function Webplayback() {
   const [{ token }, dispatch] = useStateProvider();
@@ -25,7 +27,22 @@ export default function Webplayback() {
       window.player = player;
 
       window.player.addListener("ready", ({ device_id }) => {
-        console.log("Ready with Device ID", device_id);
+        const setDevice = async () => {
+          await axios.put(
+            "https://api.spotify.com/v1/me/player",
+            {
+              device_ids:[device_id]
+            },
+            {
+              headers: {
+                Authorization: "Bearer " + token,
+                "Content-Type": "application/json",
+              },
+            }
+          )
+        }
+        setDevice();
+
       });
 
       window.player.addListener("not_ready", ({ device_id }) => {
@@ -55,10 +72,12 @@ export default function Webplayback() {
 
       window.player.connect();
     };
+
   }, [token, dispatch]);
   return (
     <>
       <PlayerControls />
+      <Volume />
     </>
   );
 }

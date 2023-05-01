@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import CurrentTrack from './CurrentTrack';
-import Volume from './Volume';
 import Webplayback from './Webplayback';
 
 export default function Footer() {
@@ -9,7 +8,6 @@ export default function Footer() {
     <Container>
       <CurrentTrack />
       <Webplayback />
-      <Volume />
     </Container>
   )
 }
