@@ -6,8 +6,10 @@ import axios from "axios";
 import { reducerCases } from "../utils/Constants";
 
 export default function Body({ headerBackground }) {
-  const [{ token, selectedPlaylistId, selectedPlaylist }, dispatch] =
-    useStateProvider();
+  const [
+    { token, selectedPlaylistId, selectedPlaylist },
+    dispatch,
+  ] = useStateProvider();
   useEffect(() => {
     const getInitialPlaylist = async () => {
       const response = await axios.get(
@@ -31,9 +33,9 @@ export default function Body({ headerBackground }) {
           name: track.name,
           artists: track.artists.map((artist) => artist.name),
           image: track.album.images[2].url,
-          duration: track.duration_ms,
           album: track.album.name,
           context_uri: response.data.uri,
+          duration: track.duration_ms,
           track_number: track.track_number,
         })),
       };
@@ -54,14 +56,16 @@ export default function Body({ headerBackground }) {
     artists,
     image,
     context_uri,
-    track_number
+    duration,
+    track_number,
+    index
   ) => {
     const response = await axios.put(
       `https://api.spotify.com/v1/me/player/play`,
       {
         context_uri,
         offset: {
-          position: track_number
+          position: index,
         },
         position_ms: 0,
       },
@@ -78,8 +82,10 @@ export default function Body({ headerBackground }) {
         name,
         artists,
         image,
+        duration: msToMinutesAndSeconds(duration)
       };
       dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying });
+      dispatch({type: reducerCases.SET_PLAYER_STATE, playerState: true })
     } else {
       dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
     }
@@ -124,10 +130,10 @@ export default function Body({ headerBackground }) {
                     name,
                     artists,
                     image,
-                    duration,
                     album,
                     context_uri,
-                    track_number,
+                    duration,
+                    track_number
                   },
                   index
                 ) => {
@@ -135,16 +141,23 @@ export default function Body({ headerBackground }) {
                     <div
                       className="row"
                       key={id}
-                      onClick={() =>
-                        playTrack(
-                          id,
-                          name,
-                          artists,
-                          image,
-                          context_uri,
-                          index
-                        )
-                      }
+                      onClick={async () => {
+                        try {
+                          await window.player.activateElement();
+                          playTrack(
+                            id,
+                            name,
+                            artists,
+                            image,
+                            context_uri,
+                            duration,
+                            track_number,
+                            index
+                          );
+                        } catch (error) {
+                          console.error(error);
+                        }
+                      }}
                     >
                       <div className="col">
                         <span>{index + 1}</span>

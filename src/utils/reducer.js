@@ -7,7 +7,9 @@ export const initialState = {
     selectedPlaylistId: "1zczoFMTHFE7MKej2VycEj",
     selectedPlaylist: null,
     currentlyPlaying: null,
-    playerState: false
+    playerState: false,
+    shuffleState: null,
+    repeatState: null
 }
 
 const reducer = (state, action) => {
@@ -46,6 +48,18 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 playerState: action.playerState
+            }
+        }
+        case reducerCases.SET_SHUFFLE_STATE: {
+            return {
+                ...state,
+                shuffleState: action.shuffleState
+            }
+        }
+        case reducerCases.SET_REPEAT_STATE: {
+            return {
+                ...state,
+                repeatState: action.repeatState
             }
         }
         case reducerCases.SET_PLAYLIST_ID: {

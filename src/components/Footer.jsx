@@ -1,17 +1,15 @@
-import React from 'react'
-import styled from 'styled-components'
-import CurrentTrack from './CurrentTrack';
-import Webplayback from './Webplayback';
+import styled from "styled-components";
+import CurrentTrack from "./CurrentTrack";
+import Webplayback from "./Webplayback";
 
 export default function Footer() {
   return (
     <Container>
-      <CurrentTrack />
+        <CurrentTrack />
       <Webplayback />
     </Container>
-  )
+  );
 }
-
 
 const Container = styled.div`
   height: 100%;
