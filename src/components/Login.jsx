@@ -5,7 +5,7 @@ export default function Login() {
 
     const handleClick = () => {
         const clientId = "788cecc9a7f74beda4987267ce839a8e"
-        const redirectUrl = "https://sparkly-puppy-06bc75.netlify.app";
+        const redirectUrl = process.env.NODE_ENV !== "production" ? process.env.REACT_APP_REDIRECT_URL : process.env.production.REACT_APP_PRODUCTION_REDIRECT_URL;
         const apiUrl = "https://accounts.spotify.com/authorize"
         const scope = [
             'user-read-email',
