@@ -5,7 +5,7 @@ export default function Login() {
 
     const handleClick = () => {
         const clientId = "788cecc9a7f74beda4987267ce839a8e"
-        const redirectUrl = process.env.NODE_ENV !== "production" ? process.env.REACT_APP_REDIRECT_URL : process.env.REACT_APP_PRODUCTION_REDIRECT_URL;
+        const redirectUri = process.env.NODE_ENV !== "production" ? process.env.REACT_APP_PRODUCTION_REDIRECT_URI : process.env.REACT_APP_PRODUCTION_REDIRECT_URI;
         const apiUrl = "https://accounts.spotify.com/authorize"
         const scope = [
             'user-read-email',
@@ -18,7 +18,7 @@ export default function Login() {
             'user-top-read',
             'streaming'
         ]
-        window.location.href = `${apiUrl}?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scope.join(" ")}&response_type=token&show_dialog=true`
+        window.location.href = `${apiUrl}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope.join(" ")}&response_type=token&show_dialog=true`
     }
   return (
     <Container>
